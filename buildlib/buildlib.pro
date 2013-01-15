@@ -19,11 +19,16 @@ INCLUDEPATH += .
 
 SOURCES += utils/detailsbutton.cpp \
            utils/detailswidget.cpp \
-           utils/stylehelper.cpp
+           utils/stylehelper.cpp \
+    utils/infobar.cpp
 
 HEADERS += utils/detailsbutton.h \
            utils/detailswidget.h \
            utils/stylehelper.h \
-           utils/qtcreatorutilities_global.h
+           utils/qtcreatorutilities_global.h \
+    utils/infobar.h
+
+RESOURCES += \
+    utils/qtcreatorutilities.qrc
 
 

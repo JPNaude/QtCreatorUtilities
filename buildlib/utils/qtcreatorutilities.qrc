@@ -1,0 +1,13 @@
+<RCC>
+    <qresource prefix="/">
+        <file>images/arrowdown.png</file>
+        <file>images/arrowup.png</file>
+        <file>images/button_close.png</file>
+        <file>images/clear.png</file>
+        <file>images/closebutton.png</file>
+        <file>images/darkarrowdown.png</file>
+        <file>images/darkarrowup.png</file>
+        <file>images/darkclose.png</file>
+        <file>images/darkclosebutton.png</file>
+    </qresource>
+</RCC>
