@@ -17,6 +17,14 @@ public:
     explicit ExampleWidget(QWidget *parent = 0);
     ~ExampleWidget();
     
+private slots:
+    void on_btnAddInfoMessage_clicked();
+    void on_btnAddInfoMessageCancel_clicked();
+    void on_btnAddInfoMessageCustom_clicked();
+    void handleInfoBarCancelButton();
+    void handleInfoBarCustomButton();
+    QString newInfoId();
+
 private:
     Ui::ExampleWidget *ui;
     ExampleWidgetData* d;

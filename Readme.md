@@ -1,7 +1,7 @@
 Introduction
 ------------
 
-The library contains numerous, usefull classes from the [Qt Creator](http://qt.gitorious.org/qt-creator) project.
+The library contains numerous, useful classes from the [Qt Creator](http://qt.gitorious.org/qt-creator) project.
 
 Usage
 -----
