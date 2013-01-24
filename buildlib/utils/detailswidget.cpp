@@ -1,50 +1,47 @@
-/**************************************************************************
+/****************************************************************************
 **
-** This file is part of Qt Creator
+** Copyright (C) 2012 Digia Plc and/or its subsidiary(-ies).
+** Contact: http://www.qt-project.org/legal
 **
-** Copyright (c) 2011 Nokia Corporation and/or its subsidiary(-ies).
+** This file is part of Qt Creator.
 **
-** Contact: Nokia Corporation (qt-info@nokia.com)
-**
+** Commercial License Usage
+** Licensees holding valid commercial Qt licenses may use this file in
+** accordance with the commercial license agreement provided with the
+** Software or, alternatively, in accordance with the terms contained in
+** a written agreement between you and Digia.  For licensing terms and
+** conditions see http://qt.digia.com/licensing.  For further information
+** use the contact form at http://qt.digia.com/contact-us.
 **
 ** GNU Lesser General Public License Usage
+** Alternatively, this file may be used under the terms of the GNU Lesser
+** General Public License version 2.1 as published by the Free Software
+** Foundation and appearing in the file LICENSE.LGPL included in the
+** packaging of this file.  Please review the following information to
+** ensure the GNU Lesser General Public License version 2.1 requirements
+** will be met: http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html.
 **
-** This file may be used under the terms of the GNU Lesser General Public
-** License version 2.1 as published by the Free Software Foundation and
-** appearing in the file LICENSE.LGPL included in the packaging of this file.
-** Please review the following information to ensure the GNU Lesser General
-** Public License version 2.1 requirements will be met:
-** http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html.
-**
-** In addition, as a special exception, Nokia gives you certain additional
-** rights. These rights are described in the Nokia Qt LGPL Exception
+** In addition, as a special exception, Digia gives you certain additional
+** rights.  These rights are described in the Digia Qt LGPL Exception
 ** version 1.1, included in the file LGPL_EXCEPTION.txt in this package.
 **
-** Other Usage
-**
-** Alternatively, this file may be used in accordance with the terms and
-** conditions contained in a signed written agreement between you and Nokia.
-**
-** If you have questions regarding the use of this file, please contact
-** Nokia at qt-info@nokia.com.
-**
-**************************************************************************/
+****************************************************************************/
 
 #include "detailswidget.h"
 #include "detailsbutton.h"
 
-#include <QtCore/QStack>
-#include <QtCore/QPropertyAnimation>
+#include <QStack>
+#include <QPropertyAnimation>
 
-#include <QtGui/QGridLayout>
-#include <QtGui/QLabel>
-#include <QtGui/QCheckBox>
-#include <QtGui/QPainter>
-#include <QtGui/QScrollArea>
-#include <QtGui/QApplication>
+#include <QGridLayout>
+#include <QLabel>
+#include <QCheckBox>
+#include <QPainter>
+#include <QScrollArea>
+#include <QApplication>
 
 /*!
-    \class QtCreatorUtilities::DetailsWidget
+    \class Utils::DetailsWidget
 
     \brief Widget a button to expand a 'Details' area.
 
@@ -71,7 +68,6 @@ class DetailsWidgetPrivate
 public:
     DetailsWidgetPrivate(QWidget *parent);
 
-    QPixmap cacheBackground(const QSize &size, bool expanded);
     void updateControls();
     void changeHoverState(bool hovered);
 
@@ -133,27 +129,19 @@ DetailsWidgetPrivate::DetailsWidgetPrivate(QWidget *parent) :
     m_grid->addWidget(m_additionalSummaryLabel, 1, 0, 1, 3);
 }
 
-QPixmap DetailsWidgetPrivate::cacheBackground(const QSize &size, bool expanded)
+QPixmap DetailsWidget::createBackground(const QSize &size, int topHeight, QWidget *widget)
 {
     QPixmap pixmap(size);
     pixmap.fill(Qt::transparent);
     QPainter p(&pixmap);
 
-    int topHeight = m_useCheckBox ? m_summaryCheckBox->height() : m_summaryLabel->height();
-    if (m_state == DetailsWidget::Expanded || m_state == DetailsWidget::Collapsed) // Details Button is shown
-        topHeight = qMax(m_detailsButton->height(), topHeight);
-
     QRect topRect(0, 0, size.width(), topHeight);
     QRect fullRect(0, 0, size.width(), size.height());
 #ifdef Q_WS_MAC
-    p.fillRect(fullRect, qApp->palette().window().color());
+        p.fillRect(fullRect, qApp->palette().window().color());
+#else
+        p.fillRect(fullRect, QColor(255, 255, 255, 40));
 #endif
-    p.fillRect(fullRect, QColor(255, 255, 255, 40));
-
-    QColor highlight = q->palette().highlight().color();
-    highlight.setAlpha(0.5);
-    if (expanded)
-        p.fillRect(topRect, highlight);
 
     QLinearGradient lg(topRect.topLeft(), topRect.bottomLeft());
     lg.setColorAt(0, QColor(255, 255, 255, 130));
@@ -167,7 +155,7 @@ QPixmap DetailsWidgetPrivate::cacheBackground(const QSize &size, bool expanded)
     p.setBrush(Qt::NoBrush);
     p.setPen(QColor(255,255,255,140));
     p.drawRoundedRect(fullRect.adjusted(1, 1, -2, -2), 2, 2);
-    p.setPen(QPen(q->palette().color(QPalette::Mid)));
+    p.setPen(QPen(widget->palette().color(QPalette::Mid)));
 
     return pixmap;
 }
@@ -195,10 +183,10 @@ void DetailsWidgetPrivate::changeHoverState(bool hovered)
 {
     if (!m_toolWidget)
         return;
-#ifdef Q_OS_MAC
-    m_toolWidget->setVisible(hovered);
+#ifdef Q_WS_MAC
+        m_toolWidget->setOpacity(hovered ? 1.0 : 0);
 #else
-    m_toolWidget->fadeTo(hovered ? 1.0 : 0);
+        m_toolWidget->fadeTo(hovered ? 1.0 : 0);
 #endif
     m_hovered = hovered;
 }
@@ -271,15 +259,19 @@ void DetailsWidget::paintEvent(QPaintEvent *paintEvent)
     QPoint topLeft(topLeftWidget->geometry().left() - MARGIN, contentsRect().top());
     const QRect paintArea(topLeft, contentsRect().bottomRight());
 
+    int topHeight = d->m_useCheckBox ? d->m_summaryCheckBox->height() : d->m_summaryLabel->height();
+    if (d->m_state == DetailsWidget::Expanded || d->m_state == DetailsWidget::Collapsed) // Details Button is shown
+        topHeight = qMax(d->m_detailsButton->height(), topHeight);
+
     if (d->m_state == Collapsed) {
         if (d->m_collapsedPixmap.isNull() ||
             d->m_collapsedPixmap.size() != size())
-            d->m_collapsedPixmap = d->cacheBackground(paintArea.size(), false);
+            d->m_collapsedPixmap = createBackground(paintArea.size(), topHeight, this);
         p.drawPixmap(paintArea, d->m_collapsedPixmap);
     } else {
         if (d->m_expandedPixmap.isNull() ||
             d->m_expandedPixmap.size() != size())
-            d->m_expandedPixmap = d->cacheBackground(paintArea.size(), true);
+            d->m_expandedPixmap = createBackground(paintArea.size(), topHeight, this);
         p.drawPixmap(paintArea, d->m_expandedPixmap);
     }
 }
@@ -346,6 +338,16 @@ QWidget *DetailsWidget::widget() const
     return d->m_widget;
 }
 
+QWidget *DetailsWidget::takeWidget()
+{
+    QWidget *widget = d->m_widget;
+    d->m_widget = 0;
+    d->m_grid->removeWidget(widget);
+    if (widget)
+        widget->setParent(0);
+    return widget;
+}
+
 void DetailsWidget::setWidget(QWidget *widget)
 {
     if (d->m_widget == widget)
@@ -379,7 +381,7 @@ void DetailsWidget::setToolWidget(QtCreatorUtilities::FadingPanel *widget)
     d->m_grid->addWidget(d->m_toolWidget, 0, 1, 1, 1, Qt::AlignRight);
 
 #ifdef Q_WS_MAC
-    d->m_toolWidget->setOpacity(1.0);
+        d->m_toolWidget->setOpacity(1.0);
 #endif
     d->changeHoverState(d->m_hovered);
 }
@@ -389,4 +391,4 @@ QWidget *DetailsWidget::toolWidget() const
     return d->m_toolWidget;
 }
 
-} // namespace QtCreatorUtilities
+} // namespace Utils

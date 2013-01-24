@@ -15,8 +15,8 @@ namespace DesignCore {
         const char * const QT_CREATOR_ICON_DARK_ARROW_UP = ":/images/darkarrowup.png";
         const char * const QT_CREATOR_ICON_DARK_BUTTON_CLOSE = ":/images/darkclose.png";
         const char * const QT_CREATOR_ICON_DARK_BUTTON_CLOSE_LIGHT = ":/images/darkclosebutton.png";
-        const char * const QT_CREATOR_ICON_DISABLED = ":/images/disabled.png";
-        const char * const QT_CREATOR_ICON_SETTINGS = ":/images/settings.png";
+        const char * const QT_CREATOR_ICON_DISABLED = ":/images/disabledbuildstep.png";
+        const char * const QT_CREATOR_ICON_SETTINGS = ":/images/settingsbutton.png";
     }
 }
 

@@ -9,5 +9,7 @@
         <file>images/darkarrowup.png</file>
         <file>images/darkclose.png</file>
         <file>images/darkclosebutton.png</file>
+        <file>images/disabledbuildstep.png</file>
+        <file>images/settingsbutton.png</file>
     </qresource>
 </RCC>

@@ -1,49 +1,45 @@
-/**************************************************************************
+/****************************************************************************
 **
-** This file is part of Qt Creator
+** Copyright (C) 2012 Digia Plc and/or its subsidiary(-ies).
+** Contact: http://www.qt-project.org/legal
 **
-** Copyright (c) 2011 Nokia Corporation and/or its subsidiary(-ies).
+** This file is part of Qt Creator.
 **
-** Contact: Nokia Corporation (qt-info@nokia.com)
-**
+** Commercial License Usage
+** Licensees holding valid commercial Qt licenses may use this file in
+** accordance with the commercial license agreement provided with the
+** Software or, alternatively, in accordance with the terms contained in
+** a written agreement between you and Digia.  For licensing terms and
+** conditions see http://qt.digia.com/licensing.  For further information
+** use the contact form at http://qt.digia.com/contact-us.
 **
 ** GNU Lesser General Public License Usage
+** Alternatively, this file may be used under the terms of the GNU Lesser
+** General Public License version 2.1 as published by the Free Software
+** Foundation and appearing in the file LICENSE.LGPL included in the
+** packaging of this file.  Please review the following information to
+** ensure the GNU Lesser General Public License version 2.1 requirements
+** will be met: http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html.
 **
-** This file may be used under the terms of the GNU Lesser General Public
-** License version 2.1 as published by the Free Software Foundation and
-** appearing in the file LICENSE.LGPL included in the packaging of this file.
-** Please review the following information to ensure the GNU Lesser General
-** Public License version 2.1 requirements will be met:
-** http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html.
-**
-** In addition, as a special exception, Nokia gives you certain additional
-** rights. These rights are described in the Nokia Qt LGPL Exception
+** In addition, as a special exception, Digia gives you certain additional
+** rights.  These rights are described in the Digia Qt LGPL Exception
 ** version 1.1, included in the file LGPL_EXCEPTION.txt in this package.
 **
-** Other Usage
-**
-** Alternatively, this file may be used in accordance with the terms and
-** conditions contained in a signed written agreement between you and Nokia.
-**
-** If you have questions regarding the use of this file, please contact
-** Nokia at qt-info@nokia.com.
-**
-**************************************************************************/
+****************************************************************************/
 
 #include "detailsbutton.h"
 
 #include "stylehelper.h"
 
-#include <QtGui/QPaintEvent>
-#include <QtGui/QPainter>
-#include <QtGui/QStyleOption>
-#include <QtGui/QGraphicsOpacityEffect>
-#include <QtCore/QPropertyAnimation>
+#include <QPropertyAnimation>
+#include <QPaintEvent>
+#include <QPainter>
+#include <QStyleOption>
 
 using namespace QtCreatorUtilities;
 
-FadingPanel::FadingPanel(QWidget *parent) :
-    QWidget(parent),
+FadingWidget::FadingWidget(QWidget *parent) :
+    FadingPanel(parent),
     m_opacityEffect(new QGraphicsOpacityEffect)
 {
     m_opacityEffect->setOpacity(0);
@@ -57,17 +53,22 @@ FadingPanel::FadingPanel(QWidget *parent) :
     setPalette(pal);
 }
 
-void FadingPanel::setOpacity(qreal value)
+void FadingWidget::setOpacity(qreal value)
 {
     m_opacityEffect->setOpacity(value);
 }
 
-void FadingPanel::fadeTo(float value)
+void FadingWidget::fadeTo(qreal value)
 {
     QPropertyAnimation *animation = new QPropertyAnimation(m_opacityEffect, "opacity");
     animation->setDuration(200);
     animation->setEndValue(value);
     animation->start(QAbstractAnimation::DeleteWhenStopped);
+}
+
+qreal FadingWidget::opacity()
+{
+    return m_opacityEffect->opacity();
 }
 
 DetailsButton::DetailsButton(QWidget *parent) : QAbstractButton(parent), m_fader(0)
@@ -90,7 +91,7 @@ QSize DetailsButton::sizeHint() const
 
 bool DetailsButton::event(QEvent *e)
 {
-    switch(e->type()) {
+    switch (e->type()) {
     case QEvent::Enter:
         {
             QPropertyAnimation *animation = new QPropertyAnimation(this, "fader");
@@ -118,6 +119,8 @@ void DetailsButton::paintEvent(QPaintEvent *e)
     QWidget::paintEvent(e);
 
     QPainter p(this);
+
+    // draw hover animation
 #ifndef Q_WS_MAC
     // draw hover animation
     if (!isDown() && m_fader > 0)
@@ -165,7 +168,7 @@ QPixmap DetailsButton::cacheRendering(const QSize &size, bool checked)
     p.drawRoundedRect(1, 1, size.width()-3, size.height()-3, 1, 1);
     p.setPen(QPen(QColor(0, 0, 0, 40)));
     p.drawLine(0, 1, 0, size.height() - 2);
-    if(checked)
+    if (checked)
         p.drawLine(1, size.height() - 1, size.width() - 1, size.height() - 1);
 
     p.setPen(palette().color(QPalette::Text));
