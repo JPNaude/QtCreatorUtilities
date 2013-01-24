@@ -49,7 +49,7 @@ QT_END_NAMESPACE
 
 // Helper class holding all custom color values
 
-namespace Utils {
+namespace QtCreatorUtilities {
 class QT_CREATOR_UTILITIES_EXPORT StyleHelper
 {
 public:
@@ -98,5 +98,5 @@ private:
     static QColor m_requestedBaseColor;
 };
 
-} // namespace Utils
+} // namespace QtCreatorUtilities
 #endif // STYLEHELPER_H

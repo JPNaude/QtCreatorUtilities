@@ -39,7 +39,7 @@
 
 #include <QVariant>
 
-namespace Core {
+namespace QtCreatorUtilities {
 
 InfoBarEntry::InfoBarEntry(const QString &_id, const QString &_infoText)
     : id(_id)
@@ -60,6 +60,13 @@ void InfoBarEntry::setCustomButtonInfo(const QString &_buttonText, QObject *_obj
 
 void InfoBarEntry::setCancelButtonInfo(QObject *_object, const char *_member)
 {
+    cancelObject = _object;
+    cancelButtonPressMember = _member;
+}
+
+void InfoBarEntry::setCancelButtonInfo(const QString &_cancelButtonText, QObject *_object, const char *_member)
+{
+    cancelButtonText = _cancelButtonText;
     cancelObject = _object;
     cancelButtonPressMember = _member;
 }
@@ -167,17 +174,24 @@ void InfoBarDisplay::update()
         }
 
         QToolButton *infoWidgetCloseButton = new QToolButton;
-        infoWidgetCloseButton->setAutoRaise(true);
-        infoWidgetCloseButton->setIcon(QIcon(QLatin1String(":/images/clear.png")));
-        infoWidgetCloseButton->setToolTip(tr("Close"));
         infoWidgetCloseButton->setProperty("infoId", info.id);
-        connect(infoWidgetCloseButton, SIGNAL(clicked()), SLOT(cancelButtonClicked()));
 
+        // need to connect to cancelObjectbefore connecting to cancelButtonClicked,
+        // because the latter removes the button and with it any connect
         if (info.cancelObject)
             connect(infoWidgetCloseButton, SIGNAL(clicked()),
                     info.cancelObject, info.cancelButtonPressMember);
+        connect(infoWidgetCloseButton, SIGNAL(clicked()), SLOT(cancelButtonClicked()));
 
-        hbox->addWidget(infoWidgetCloseButton);
+        if (info.cancelButtonText.isEmpty()) {
+            infoWidgetCloseButton->setAutoRaise(true);
+            infoWidgetCloseButton->setIcon(QIcon(QLatin1String(":/images/clear.png")));
+            infoWidgetCloseButton->setToolTip(tr("Close"));
+            hbox->addWidget(infoWidgetCloseButton);
+        } else {
+            infoWidgetCloseButton->setText(info.cancelButtonText);
+            hbox->addWidget(infoWidgetCloseButton);
+        }
 
         connect(infoWidget, SIGNAL(destroyed()), SLOT(widgetDestroyed()));
         m_boxLayout->insertWidget(m_boxIndex, infoWidget);
@@ -196,4 +210,4 @@ void InfoBarDisplay::cancelButtonClicked()
     m_infoBar->removeInfo(sender()->property("infoId").toString());
 }
 
-} // namespace Core
+} // namespace QtCreatorUtilities

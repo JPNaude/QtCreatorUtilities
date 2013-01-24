@@ -57,7 +57,7 @@ static int range(float x, int min, int max)
 }
 */
 
-namespace Utils {
+namespace QtCreatorUtilities {
 
 QColor StyleHelper::mergedColors(const QColor &colorA, const QColor &colorB, int factor)
 {
@@ -506,4 +506,4 @@ void StyleHelper::tintImage(QImage &img, const QColor &tintColor)
 }
 
 
-} // namespace Utils
+} // namespace QtCreatorUtilities

@@ -23,7 +23,7 @@ private slots:
     void on_btnAddInfoMessageCustom_clicked();
     void handleInfoBarCancelButton();
     void handleInfoBarCustomButton();
-    QString newInfoId();
+    QString newInfoBarEntryId();
 
 private:
     Ui::ExampleWidget *ui;

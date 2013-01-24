@@ -44,7 +44,7 @@
 #include <QtGui/QApplication>
 
 /*!
-    \class Utils::DetailsWidget
+    \class QtCreatorUtilities::DetailsWidget
 
     \brief Widget a button to expand a 'Details' area.
 
@@ -62,7 +62,7 @@
     \endcode
 */
 
-namespace Utils {
+namespace QtCreatorUtilities {
 
 static const int MARGIN = 8;
 
@@ -81,7 +81,7 @@ public:
     QLabel *m_summaryLabel;
     QCheckBox *m_summaryCheckBox;
     QLabel *m_additionalSummaryLabel;
-    Utils::FadingPanel *m_toolWidget;
+    QtCreatorUtilities::FadingPanel *m_toolWidget;
     QWidget *m_widget;
 
     QPixmap m_collapsedPixmap;
@@ -365,7 +365,7 @@ void DetailsWidget::setWidget(QWidget *widget)
     d->updateControls();
 }
 
-void DetailsWidget::setToolWidget(Utils::FadingPanel *widget)
+void DetailsWidget::setToolWidget(QtCreatorUtilities::FadingPanel *widget)
 {
     if (d->m_toolWidget == widget)
         return;
@@ -389,4 +389,4 @@ QWidget *DetailsWidget::toolWidget() const
     return d->m_toolWidget;
 }
 
-} // namespace Utils
+} // namespace QtCreatorUtilities

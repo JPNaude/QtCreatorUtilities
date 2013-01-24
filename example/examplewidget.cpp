@@ -2,12 +2,8 @@
 #include "ui_examplewidget.h"
 
 #include <detailswidget.h>
-// DetailsWidget is located in namespace Utils:
-using namespace Utils;
-
 #include <infobar.h>
-// DetailsWidget is located in namespace Core:
-using namespace Core;
+using namespace QtCreatorUtilities;
 
 #include <QtDebug>
 #include <QMessageBox>
@@ -64,20 +60,21 @@ ExampleWidget::~ExampleWidget()
 }
 
 void ExampleWidget::on_btnAddInfoMessage_clicked() {
-    InfoBarEntry info_entry(newInfoId(),"Example info bar message");
+    InfoBarEntry info_entry(newInfoBarEntryId(),"Example info bar message");
     d->info_bar.addInfo(info_entry);
 }
 
 void ExampleWidget::on_btnAddInfoMessageCancel_clicked() {
-    InfoBarEntry info_entry(newInfoId(),"Example info bar message");
+    InfoBarEntry info_entry(newInfoBarEntryId(),"Example info bar message");
     info_entry.setCancelButtonInfo(this,SLOT(handleInfoBarCancelButton()));
     d->info_bar.addInfo(info_entry);
 }
 
 void ExampleWidget::on_btnAddInfoMessageCustom_clicked() {
-    InfoBarEntry info_entry(newInfoId(),"Example info bar message");
+    InfoBarEntry info_entry(newInfoBarEntryId(),"Example info bar message");
     info_entry.setCustomButtonInfo("Custom Button",this,SLOT(handleInfoBarCustomButton()));
     d->info_bar.addInfo(info_entry);
+
 }
 
 void ExampleWidget::handleInfoBarCancelButton() {
@@ -92,7 +89,7 @@ void ExampleWidget::handleInfoBarCustomButton() {
     msgbox.exec();
 }
 
-QString ExampleWidget::newInfoId() {
+QString ExampleWidget::newInfoBarEntryId() {
     QString new_id = QString("id_%1").arg(d->info_id_count);
     ++d->info_id_count;
     return new_id;

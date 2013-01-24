@@ -32,7 +32,7 @@
 
 #include "detailsbutton.h"
 
-#include <utils/stylehelper.h>
+#include "stylehelper.h"
 
 #include <QtGui/QPaintEvent>
 #include <QtGui/QPainter>
@@ -40,7 +40,7 @@
 #include <QtGui/QGraphicsOpacityEffect>
 #include <QtCore/QPropertyAnimation>
 
-using namespace Utils;
+using namespace QtCreatorUtilities;
 
 FadingPanel::FadingPanel(QWidget *parent) :
     QWidget(parent),

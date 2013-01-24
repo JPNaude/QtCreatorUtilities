@@ -7,7 +7,7 @@ TEMPLATE = lib
 CONFIG(debug, debug|release) {
     TARGET = QtCreatorUtilitiesd
 } else {
-    TARGET = QtCreatorUtilitiesd
+    TARGET = QtCreatorUtilities
 }
 
 DESTDIR = $OUT_PWD/../../lib
@@ -26,7 +26,8 @@ HEADERS += utils/detailsbutton.h \
            utils/detailswidget.h \
            utils/stylehelper.h \
            utils/qtcreatorutilities_global.h \
-    utils/infobar.h
+    utils/infobar.h \
+    utils/QtCreatorUtilitiesConstants.h
 
 RESOURCES += \
     utils/qtcreatorutilities.qrc

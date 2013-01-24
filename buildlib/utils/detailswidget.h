@@ -37,7 +37,7 @@
 
 #include <QtGui/QWidget>
 
-namespace Utils {
+namespace QtCreatorUtilities {
 
 class DetailsWidgetPrivate;
 class FadingPanel;
@@ -75,7 +75,7 @@ public:
     void setWidget(QWidget *widget);
     QWidget *widget() const;
 
-    void setToolWidget(Utils::FadingPanel *widget);
+    void setToolWidget(QtCreatorUtilities::FadingPanel *widget);
     QWidget *toolWidget() const;
 
     void setSummaryFontBold(bool b);
@@ -105,6 +105,6 @@ private:
     DetailsWidgetPrivate *d;
 };
 
-} // namespace Utils
+} // namespace QtCreatorUtilities
 
 #endif // DETAILSWIDGET_H

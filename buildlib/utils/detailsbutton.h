@@ -40,7 +40,7 @@
 
 QT_FORWARD_DECLARE_CLASS(QGraphicsOpacityEffect)
 
-namespace Utils {
+namespace QtCreatorUtilities {
 
 class QT_CREATOR_UTILITIES_EXPORT FadingPanel : public QWidget
 {
@@ -74,5 +74,5 @@ private:
     QPixmap m_uncheckedPixmap;
     float m_fader;
 };
-} // namespace Utils
+} // namespace QtCreatorUtilities
 #endif // DETAILSBUTTON_H
