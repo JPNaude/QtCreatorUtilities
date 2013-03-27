@@ -2,9 +2,8 @@
 #define QT_CREATOR_UTILITIES_CONSTANTS_H
 
 #include <QObject>
-#include <ScinericWorkspace.h>
 
-namespace DesignCore {
+namespace QtCreatorUtilities {
     namespace Constants {
         const char * const QT_CREATOR_ICON_ARROW_DOWN = ":/images/arrowdown.png";
         const char * const QT_CREATOR_ICON_ARROW_UP = ":/images/arrowup.png";
