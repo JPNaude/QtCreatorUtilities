@@ -17,6 +17,11 @@ DEFINES += QT_CREATOR_UTILITIES_LIBRARY
 INCLUDEPATH += utils
 INCLUDEPATH += .
 
+greaterThan(QT_MAJOR_VERSION, 4) {
+QT += widgets \
+      printsupport
+}
+
 SOURCES += utils/detailsbutton.cpp \
            utils/detailswidget.cpp \
            utils/stylehelper.cpp \

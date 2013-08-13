@@ -4,14 +4,19 @@
 
 TEMPLATE = app
 TARGET = QtCreatorUtilitiesExample
-DEPENDPATH += $$OUT_PWD/../buildlib
-INCLUDEPATH += $$OUT_PWD/../buildlib \
-               $$OUT_PWD/../buildlib/utils
+DEPENDPATH += $$PWD/../buildlib
+INCLUDEPATH += $$PWD/../buildlib \
+               $$PWD/../buildlib/utils
 
 CONFIG(debug, debug|release) {
-    LIBS += -L$$OUT_PWD/../lib -lQtCreatorUtilitiesd
+    LIBS += -L$$PWD/../lib -lQtCreatorUtilitiesd
 } else {
-    LIBS += -L$$OUT_PWD/../lib -lQtCreatorUtilities
+    LIBS += -L$$PWD/../lib -lQtCreatorUtilities
+}
+
+greaterThan(QT_MAJOR_VERSION, 4) {
+QT += widgets \
+      printsupport
 }
 
 # Input
