@@ -75,7 +75,7 @@ DetailsButton::DetailsButton(QWidget *parent) : QAbstractButton(parent), m_fader
 {
     setCheckable(true);
     setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Minimum);
-    setText(tr("Details"));
+    setText(QObject::tr("Details"));
 }
 
 QSize DetailsButton::sizeHint() const
