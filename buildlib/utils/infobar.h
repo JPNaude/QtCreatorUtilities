@@ -36,6 +36,7 @@
 #include "qtcreatorutilities_global.h"
 
 #include <QObject>
+#include <QIcon>
 
 QT_BEGIN_NAMESPACE
 class QBoxLayout;
@@ -49,13 +50,14 @@ class InfoBarDisplay;
 class QT_CREATOR_UTILITIES_EXPORT InfoBarEntry
 {
 public:
-    InfoBarEntry(const QString &_id, const QString &_infoText);
+    InfoBarEntry(const QString &_id, const QString &_infoText, const QIcon& _icon = QIcon());
     InfoBarEntry(const InfoBarEntry &other) { *this = other; }
     void setCustomButtonInfo(const QString &_buttonText, QObject *_object, const char *_member);
     void setCancelButtonInfo(QObject *_object, const char *_member);
     void setCancelButtonInfo(const QString &_cancelButtonText, QObject *_object, const char *_member);
 
 private:
+    QIcon icon;
     QString id;
     QString infoText;
     QString buttonText;

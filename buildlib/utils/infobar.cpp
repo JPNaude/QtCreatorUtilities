@@ -41,8 +41,9 @@
 
 namespace QtCreatorUtilities {
 
-InfoBarEntry::InfoBarEntry(const QString &_id, const QString &_infoText)
-    : id(_id)
+InfoBarEntry::InfoBarEntry(const QString &_id, const QString &_infoText, const QIcon &_icon)
+    : icon(_icon)
+    , id(_id)
     , infoText(_infoText)
     , object(0)
     , buttonPressMember(0)
@@ -160,6 +161,13 @@ void InfoBarDisplay::update()
 
         QHBoxLayout *hbox = new QHBoxLayout(infoWidget);
         hbox->setMargin(2);
+
+        if (!info.icon.isNull()) {
+            QLabel *infoWidgetIcon = new QLabel;
+            infoWidgetIcon->setPixmap(info.icon.pixmap(12,12));
+            infoWidgetIcon->setSizePolicy(QSizePolicy::Maximum,QSizePolicy::Preferred);
+            hbox->addWidget(infoWidgetIcon);
+        }
 
         QLabel *infoWidgetLabel = new QLabel(info.infoText);
         infoWidgetLabel->setWordWrap(true);
