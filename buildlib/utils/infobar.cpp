@@ -176,6 +176,7 @@ void InfoBarDisplay::update()
         if (!info.buttonText.isEmpty()) {
             QToolButton *infoWidgetButton = new QToolButton;
             infoWidgetButton->setText(info.buttonText);
+            infoWidgetButton->setProperty("infoId", info.id);
             connect(infoWidgetButton, SIGNAL(clicked()), info.object, info.buttonPressMember);
 
             hbox->addWidget(infoWidgetButton);
