@@ -72,7 +72,6 @@ void InfoBarEntry::setCancelButtonInfo(const QString &_cancelButtonText, QObject
     cancelButtonPressMember = _member;
 }
 
-
 void InfoBar::addInfo(const InfoBarEntry &info)
 {
     m_infoBarEntries << info;

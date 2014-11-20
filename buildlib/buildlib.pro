@@ -23,16 +23,19 @@ QT += widgets \
 }
 
 SOURCES += utils/detailsbutton.cpp \
-           utils/detailswidget.cpp \
-           utils/stylehelper.cpp \
-    utils/infobar.cpp
+    utils/detailswidget.cpp \
+    utils/stylehelper.cpp \
+    utils/infobar.cpp \
+    utils/hostosinfo.cpp
 
 HEADERS += utils/detailsbutton.h \
-           utils/detailswidget.h \
-           utils/stylehelper.h \
-           utils/qtcreatorutilities_global.h \
+    utils/detailswidget.h \
+    utils/stylehelper.h \
+    utils/qtcreatorutilities_global.h \
     utils/infobar.h \
-    utils/QtCreatorUtilitiesConstants.h
+    utils/QtCreatorUtilitiesConstants.h \
+    utils/hostosinfo.h \
+    utils/osspecificaspects.h
 
 RESOURCES += \
     utils/qtcreatorutilities.qrc

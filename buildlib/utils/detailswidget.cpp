@@ -29,6 +29,7 @@
 
 #include "detailswidget.h"
 #include "detailsbutton.h"
+#include "hostosinfo.h"
 
 #include <QStack>
 #include <QPropertyAnimation>
@@ -39,6 +40,7 @@
 #include <QPainter>
 #include <QScrollArea>
 #include <QApplication>
+#include <QStyle>
 
 /*!
     \class Utils::DetailsWidget
@@ -74,6 +76,7 @@ public:
     QWidget *q;
     DetailsButton *m_detailsButton;
     QGridLayout *m_grid;
+    QLabel *m_summaryLabelIcon;
     QLabel *m_summaryLabel;
     QCheckBox *m_summaryCheckBox;
     QLabel *m_additionalSummaryLabel;
@@ -92,6 +95,7 @@ DetailsWidgetPrivate::DetailsWidgetPrivate(QWidget *parent) :
         q(parent),
         m_detailsButton(new DetailsButton),
         m_grid(new QGridLayout),
+        m_summaryLabelIcon(new QLabel(parent)),
         m_summaryLabel(new QLabel(parent)),
         m_summaryCheckBox(new QCheckBox(parent)),
         m_additionalSummaryLabel(new QLabel(parent)),
@@ -104,6 +108,11 @@ DetailsWidgetPrivate::DetailsWidgetPrivate(QWidget *parent) :
     QHBoxLayout *summaryLayout = new QHBoxLayout;
     summaryLayout->setContentsMargins(MARGIN, MARGIN, MARGIN, MARGIN);
     summaryLayout->setSpacing(0);
+
+    m_summaryLabelIcon->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+    m_summaryLabelIcon->setContentsMargins(0, 0, 0, 0);
+    m_summaryLabelIcon->setFixedWidth(0);
+    summaryLayout->addWidget(m_summaryLabelIcon);
 
     m_summaryLabel->setTextInteractionFlags(Qt::TextSelectableByMouse | Qt::LinksAccessibleByMouse);
     m_summaryLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum);
@@ -138,11 +147,10 @@ QPixmap DetailsWidget::createBackground(const QSize &size, int topHeight, QWidge
 
     QRect topRect(0, 0, size.width(), topHeight);
     QRect fullRect(0, 0, size.width(), size.height());
-#ifdef Q_WS_MAC
+    if (HostOsInfo::isMacHost())
         p.fillRect(fullRect, qApp->palette().window().color());
-#else
+    else
         p.fillRect(fullRect, QColor(255, 255, 255, 40));
-#endif
 
     QLinearGradient lg(topRect.topLeft(), topRect.bottomLeft());
     lg.setColorAt(0, QColor(255, 255, 255, 130));
@@ -167,6 +175,7 @@ void DetailsWidgetPrivate::updateControls()
         m_widget->setVisible(m_state == DetailsWidget::Expanded || m_state == DetailsWidget::NoSummary);
     m_detailsButton->setChecked(m_state == DetailsWidget::Expanded && m_widget);
     m_detailsButton->setVisible(m_state == DetailsWidget::Expanded || m_state == DetailsWidget::Collapsed);
+    m_summaryLabelIcon->setVisible(m_state != DetailsWidget::NoSummary && !m_useCheckBox);
     m_summaryLabel->setVisible(m_state != DetailsWidget::NoSummary && !m_useCheckBox);
     m_summaryCheckBox->setVisible(m_state != DetailsWidget::NoSummary && m_useCheckBox);
 
@@ -184,11 +193,10 @@ void DetailsWidgetPrivate::changeHoverState(bool hovered)
 {
     if (!m_toolWidget)
         return;
-#ifdef Q_WS_MAC
+    if (HostOsInfo::isMacHost())
         m_toolWidget->setOpacity(hovered ? 1.0 : 0);
-#else
+    else
         m_toolWidget->fadeTo(hovered ? 1.0 : 0);
-#endif
     m_hovered = hovered;
 }
 
@@ -223,8 +231,7 @@ bool DetailsWidget::useCheckBox()
 void DetailsWidget::setUseCheckBox(bool b)
 {
     d->m_useCheckBox = b;
-    d->m_summaryLabel->setVisible(b);
-    d->m_summaryCheckBox->setVisible(!b);
+    d->updateControls();
 }
 
 void DetailsWidget::setChecked(bool b)
@@ -247,6 +254,9 @@ void DetailsWidget::setSummaryFontBold(bool b)
 
 void DetailsWidget::setIcon(const QIcon &icon)
 {
+    int iconSize = style()->pixelMetric(QStyle::PM_ButtonIconSize, 0, this);
+    d->m_summaryLabelIcon->setFixedWidth(icon.isNull() ? 0 : iconSize);
+    d->m_summaryLabelIcon->setPixmap(icon.pixmap(iconSize, iconSize));
     d->m_summaryCheckBox->setIcon(icon);
 }
 
@@ -256,7 +266,7 @@ void DetailsWidget::paintEvent(QPaintEvent *paintEvent)
 
     QPainter p(this);
 
-    QWidget *topLeftWidget = d->m_useCheckBox ? static_cast<QWidget *>(d->m_summaryCheckBox) : static_cast<QWidget *>(d->m_summaryLabel);
+    QWidget *topLeftWidget = d->m_useCheckBox ? static_cast<QWidget *>(d->m_summaryCheckBox) : static_cast<QWidget *>(d->m_summaryLabelIcon);
     QPoint topLeft(topLeftWidget->geometry().left() - MARGIN, contentsRect().top());
     const QRect paintArea(topLeft, contentsRect().bottomRight());
 
@@ -381,9 +391,8 @@ void DetailsWidget::setToolWidget(QtCreatorUtilities::FadingPanel *widget)
     d->m_toolWidget->adjustSize();
     d->m_grid->addWidget(d->m_toolWidget, 0, 1, 1, 1, Qt::AlignRight);
 
-#ifdef Q_WS_MAC
+    if (HostOsInfo::isMacHost())
         d->m_toolWidget->setOpacity(1.0);
-#endif
     d->changeHoverState(d->m_hovered);
 }
 
